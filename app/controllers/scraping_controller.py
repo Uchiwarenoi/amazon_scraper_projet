@@ -50,16 +50,47 @@ class ScrapingController:
             return None
 
     def scraper_recherche(self, recherche, categorie):
-        resultats = self.scraper.rechercher_produits(recherche, categorie, limite=20)
+        resultats = self.scraper.rechercher_produits(
+            recherche, categorie, limite=20
+        )
+
         enregistres = 0
-        for d in resultats:
-            produit = Produit(d["nom"], self._convertir_prix(d["prix"]), d["description"], d["marque"],
-                              d["image_url"], d["image_locale"], d["categorie"], d["url_produit"])
+
+        for i, d in enumerate(resultats, start=1):
+            image_locale = self.scraper.enregistrer_image(
+                d.get("image_url", ""),
+                f"produit_{i}"
+            )
+
+            donnees = {
+                "nom": d["nom"],
+                "prix": self._convertir_prix(d["prix"]),
+                "description": d.get("description", ""),
+                "marque": d.get("marque", "Inconnue"),
+                "image_url": d.get("image_url", ""),
+                "image_locale": image_locale,
+                "categorie": d.get("categorie", "Autres"),
+                "url_produit": d.get("url_produit", "")
+            }
+
+            produit = Produit(
+                donnees["nom"],
+                donnees["prix"],
+                donnees["description"],
+                donnees["marque"],
+                donnees["image_url"],
+                donnees["image_locale"],
+                donnees["categorie"],
+                donnees["url_produit"]
+            )
+
             if self.depot.ajouter_produit(produit):
                 enregistres += 1
+
         if resultats:
             print(f"Produits trouvés : {len(resultats)}")
             print(f"Nouveaux produits enregistrés : {enregistres}")
+
         return resultats
 
     def exporter_produits(self):

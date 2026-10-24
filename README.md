@@ -4,37 +4,36 @@
 
 Amazon Scraper est une application console développée en Python permettant de rechercher des produits informatiques sur Amazon, de récupérer leurs informations et de les enregistrer dans une base de données locale.
 
-Le projet a pour objectif de mettre en pratique le web scraping, la programmation orientée objet, l'architecture MVC et la gestion des données.
+Le projet permet de mettre en pratique le web scraping avec Selenium, la programmation orientée objet, l'architecture MVC, la gestion d'une base SQLite et l'exportation de données au format CSV.
 
 ## 2. Fonctionnalités principales
 
-L'application propose les fonctionnalités suivantes :
+- **Recherche par catégorie :** recherche de produits informatiques à partir des catégories proposées par l'application.
+- **Recherche libre :** recherche par nom de produit, marque ou référence.
+- **Extraction de données :** récupération du nom, du prix, de l'URL du produit et de l'URL de son image lorsque ces informations sont disponibles.
+- **Téléchargement des images :** enregistrement des images récupérées dans le dossier `data/images/`.
+- **Gestion des produits :** ajout manuel, consultation, recherche par marque et comptage des produits enregistrés.
+- **Stockage local :** conservation des informations et du chemin des images dans une base SQLite.
+- **Exportation CSV :** exportation des informations des produits, notamment les URL et les chemins des images.
 
-- **Recherche par catégorie :** ordinateurs portables, ordinateurs de bureau, composants informatiques, périphériques, consoles, smartphones, équipements réseau et accessoires.
-- **Recherche libre :** saisie directe du nom d'un produit, d'une marque ou d'une référence.
-- **Extraction de données :** récupération du nom, du prix et de l'image du produit lorsque ces informations sont disponibles.
-- **Gestion des produits :** enregistrement dans SQLite, consultation, recherche par marque, comptage et ajout manuel.
-- **Exportation CSV :** sauvegarde des données dans un fichier exploitable avec Excel ou d'autres tableurs.
+Le nombre de produits récupérés est limité à 20 par recherche, selon la configuration et les résultats disponibles.
 
-Le nombre de résultats est limité à 20 produits par recherche, selon les possibilités de la page consultée.
-
-## 3. Technologies et architecture
-
-### Technologies utilisées
+## 3. Technologies utilisées
 
 - **Python :** langage principal.
-- **Selenium :** automatisation du navigateur.
-- **Google Chrome :** navigateur utilisé pour les recherches.
-- **SQLite :** base de données locale.
+- **Selenium :** automatisation du navigateur et extraction des données.
+- **Google Chrome :** navigateur utilisé pour la recherche.
+- **Requests :** téléchargement des images à partir de leurs URL.
+- **SQLite :** stockage local des produits.
 - **CSV :** exportation des données.
 - **Git et GitHub :** gestion des versions et hébergement du code.
 
-### Architecture du projet
+## 4. Architecture du projet
 
-Le projet suit une organisation inspirée du modèle MVC (Model - View - Controller).
+Le projet utilise une architecture inspirée du modèle MVC (Model - View - Controller).
 
 ```text
-amazon_scraper/
+amazon_work/
 ├── app/
 │   ├── controllers/
 │   │   └── scraping_controller.py
@@ -48,6 +47,8 @@ amazon_scraper/
 │       ├── console_view.py
 │       └── export_view.py
 ├── data/
+│   ├── images/
+│   └── produits.db
 ├── exports/
 ├── config.py
 ├── main.py
@@ -56,92 +57,70 @@ amazon_scraper/
 └── README.md
 ```
 
-Cette arborescence est indicative et doit être adaptée à la structure réelle du projet.
+Cette arborescence représente l'organisation prévue du projet. Les noms des fichiers doivent correspondre à ceux réellement présents dans le dépôt.
 
-- **Model :** gestion des produits et accès à la base de données.
-- **View :** affichage des menus et des résultats.
-- **Controller :** coordination entre les différentes parties de l'application.
-- **Scraper :** automatisation du navigateur et extraction des informations.
+- **Model :** représente les produits et gère l'accès à la base de données.
+- **View :** affiche les menus et les résultats, et gère l'exportation.
+- **Controller :** coordonne les opérations de recherche et d'enregistrement.
+- **Scraper :** automatise le navigateur, récupère les informations et télécharge les images.
 
-## 4. Installation et configuration
+## 5. Installation et configuration
 
 ### Prérequis
 
-Avant d'utiliser l'application, il faut disposer de :
-
-- Python installé sur l'ordinateur.
+- Python installé.
 - Google Chrome installé.
 - Une connexion Internet.
-- Le fichier `requirements.txt` présent à la racine du projet.
+- Le fichier `requirements.txt`.
 
-### Étape 1 : Cloner le projet
-
-Cloner le repository GitHub :
+### Étape 1 : récupérer le projet
 
 ```bash
-git clone https://github.com/TON-USERNAME/amazon_scraper_projet.git
+git clone URL_DU_DEPOT
+cd amazon_work
 ```
 
-Entrer dans le dossier du projet :
+Remplace `URL_DU_DEPOT` par l'adresse réelle de ton dépôt GitHub. Si le projet est déjà sur ton ordinateur, ouvre simplement son dossier dans le terminal.
 
-```bash
-cd amazon_scraper_projet
-```
-
-Remplacer `TON-USERNAME` par le nom d'utilisateur GitHub correspondant au repository.
-
-Si le projet est déjà présent sur l'ordinateur, ouvrir directement son dossier dans le terminal.
-
-### Étape 2 : Créer l'environnement virtuel
-
-À la racine du projet, exécuter :
+### Étape 2 : créer un environnement virtuel
 
 ```bash
 python -m venv venv
 ```
 
-Cette commande crée un environnement virtuel nommé `venv`, qui permet d'isoler les bibliothèques utilisées par le projet.
+### Étape 3 : activer l'environnement virtuel
 
-### Étape 3 : Activer l'environnement virtuel
-
-Sous Windows, dans l'invite de commandes (CMD) :
+Sous Windows avec CMD :
 
 ```cmd
 venv\Scripts\activate
 ```
 
-Dans PowerShell :
+Sous PowerShell :
 
 ```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
-Lorsque l'environnement est activé, le préfixe `(venv)` apparaît généralement au début de la ligne du terminal.
-
-### Étape 4 : Installer les dépendances
-
-Avec l'environnement virtuel activé, exécuter :
+### Étape 4 : installer les dépendances
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-Cette commande installe les bibliothèques nécessaires au fonctionnement de l'application.
+Vérifie que `requirements.txt` contient les bibliothèques réellement utilisées, notamment `selenium` et `requests` si le téléchargement des images utilise Requests.
 
-### Étape 5 : Vérifier la configuration
+### Étape 5 : vérifier la configuration
 
-Avant de lancer l'application, vérifier que :
+Le fichier `config.py` définit notamment le navigateur, les délais d'attente, le nombre maximal de produits et les chemins de stockage.
 
-- Les dépendances sont correctement installées.
-- Google Chrome est installé et accessible.
-- Selenium est correctement configuré.
-- Les chemins de stockage de la base de données et des fichiers exportés sont valides.
+Les dossiers `data/`, `data/images/` et `exports/` sont créés automatiquement par la configuration.
 
-## 5. Utilisation de l'application console
+## 6. Utilisation de l'application
 
-### Étape 1 : Lancer l'application
+### Lancer l'application
 
-Depuis la racine du projet, avec l'environnement virtuel activé, exécuter :
+Depuis la racine du projet, exécute :
 
 ```bash
 python main.py
@@ -149,61 +128,48 @@ python main.py
 
 Le menu principal s'affiche dans la console.
 
-### Étape 2 : Choisir une fonctionnalité
+### Effectuer une recherche
 
-Lire les options proposées par le menu, puis saisir le numéro correspondant à l'action souhaitée.
-
-Les fonctionnalités prévues sont les suivantes :
-
-- **Recherche par catégorie :** choisir une catégorie de produits informatiques et lancer la recherche.
-- **Recherche libre :** saisir directement le nom du produit à rechercher.
-- **Consultation des produits :** afficher les produits enregistrés dans la base de données.
-- **Recherche par marque :** retrouver les produits correspondant à une marque.
-- **Comptage des produits :** afficher le nombre de produits enregistrés.
-- **Ajout manuel :** saisir les informations d'un produit pour l'enregistrer.
-- **Exportation CSV :** enregistrer les données dans un fichier CSV.
-- **Quitter :** fermer l'application.
-
-Les numéros exacts dépendent du menu implémenté dans le code.
-
-### Étape 3 : Effectuer une recherche
-
-Pour rechercher un produit :
-
-1. Sélectionner la recherche par catégorie ou la recherche libre.
-2. Choisir une catégorie ou saisir le nom du produit souhaité.
-3. Laisser Selenium ouvrir la page de résultats.
+1. Choisir la recherche par catégorie ou la recherche libre.
+2. Sélectionner une catégorie ou saisir le produit recherché.
+3. Laisser Selenium ouvrir les résultats Amazon.
 4. Consulter les produits récupérés.
-5. Enregistrer les résultats dans la base de données si cette opération est proposée par l'application.
+5. Vérifier l'enregistrement des produits et de leurs images.
 
-La récupération des informations dépend de la disponibilité des pages et de la structure HTML utilisée par Amazon.
+Les informations récupérées dépendent de la disponibilité des pages et de la structure HTML d'Amazon.
 
-### Étape 4 : Consulter et exporter les données
+### Consulter les données
 
-Les produits enregistrés sont conservés dans la base de données SQLite.
+Les informations des produits sont stockées dans `data/produits.db`.
 
-Pour exporter les données, sélectionner l'option correspondante dans le menu. Le fichier CSV est généré dans le dossier d'exportation configuré par le projet, généralement `exports/`.
+Les images téléchargées sont conservées dans `data/images/`. La base de données enregistre leur chemin local dans le champ `image_locale`, ainsi que leur URL dans le champ `image_url`.
 
-Le fichier peut ensuite être ouvert avec Microsoft Excel, LibreOffice Calc ou un autre tableur compatible.
+### Exporter les données
 
-### Étape 5 : Résoudre les problèmes courants
+Utilise l'option d'exportation du menu pour générer un fichier CSV dans le dossier `exports/`.
+
+Le fichier CSV contient les informations exportées par l'application, notamment les URL des images et leurs chemins locaux. Il ne contient pas directement les fichiers image.
+
+Pour transférer le projet avec les images, il faut également copier le dossier `data/images/`.
+
+## 7. Résolution des problèmes courants
 
 | Problème | Solution |
 |---|---|
 | `ModuleNotFoundError` | Activer l'environnement virtuel et installer les dépendances. |
-| `python` n'est pas reconnu | Vérifier l'installation de Python et sa configuration dans le PATH. |
-| Chrome ne démarre pas | Vérifier l'installation de Chrome et la configuration de Selenium. |
-| Amazon affiche une erreur | Réessayer ultérieurement et vérifier les conditions d'accès au site. |
-| Aucun produit n'est récupéré | Vérifier les sélecteurs HTML et la structure de la page consultée. |
-| L'exportation échoue | Vérifier le chemin du fichier et les droits d'écriture. |
+| Python n'est pas reconnu | Vérifier l'installation de Python et le PATH. |
+| Chrome ne démarre pas | Vérifier Chrome et la configuration Selenium. |
+| Aucun produit n'est récupéré | Vérifier les sélecteurs et la structure HTML de la page. |
+| Une image ne se télécharge pas | Vérifier son URL, la connexion Internet et l'accès au serveur. |
+| Amazon affiche un CAPTCHA ou bloque l'accès | Arrêter les tentatives répétées et réessayer ultérieurement si l'accès est autorisé. |
+| L'export CSV échoue | Vérifier le chemin de destination et les droits d'écriture. |
 
-### Bonnes pratiques
+## 8. Bonnes pratiques
 
-- Activer l'environnement virtuel avant chaque utilisation.
-- Utiliser `WebDriverWait` pour attendre les éléments nécessaires au lieu de multiplier les pauses fixes.
+- Activer l'environnement virtuel avant d'exécuter le programme.
+- Utiliser `WebDriverWait` pour attendre les éléments nécessaires.
 - Éviter les requêtes excessives.
-- Respecter les conditions d'utilisation d'Amazon et les règles applicables à la collecte automatisée des données.
-- Ne pas versionner l'environnement virtuel `venv/` dans Git.
-- Effectuer régulièrement des commits pour conserver un historique des modifications.
-
-
+- Respecter les conditions d'utilisation d'Amazon et les règles applicables à la collecte automatisée.
+- Ne pas versionner l'environnement virtuel `venv/` ni les fichiers sensibles.
+- Effectuer régulièrement des commits Git.
+- Vérifier que le dossier `data/images/` et la base SQLite sont correctement sauvegardés si les données doivent être conservées.

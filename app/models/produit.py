@@ -1,4 +1,3 @@
-
 class Produit:
     def __init__(
         self,
@@ -9,7 +8,8 @@ class Produit:
         image_url,
         image_locale,
         categorie,
-        url_produit
+        url_produit,
+        image_blob=None
     ):
         self.nom = nom
         self.prix = prix
@@ -19,6 +19,7 @@ class Produit:
         self.image_locale = image_locale
         self.categorie = categorie
         self.url_produit = url_produit
+        self.image_blob = image_blob
 
     def afficher(self):
         print(f"Nom : {self.nom}")
@@ -27,5 +28,6 @@ class Produit:
         print(f"Marque : {self.marque}")
         print(f"Image : {self.image_url}")
         print(f"Image locale : {self.image_locale}")
+        print(f"Image enregistrée en base : {self.image_blob is not None}")
         print(f"Catégorie : {self.categorie}")
         print(f"URL du produit : {self.url_produit}")
